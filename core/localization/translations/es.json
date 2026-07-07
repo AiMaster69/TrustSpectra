@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "buttons": {
+      "load": "Cargar Audio",
+      "analyze": "Analizar",
+      "settings": "☰",
+      "cancel": "Cancelar",
+      "close_anyway": "Cerrar de todos modos",
+      "ok": "Entendido",
+      "dont_show_again": "No mostrar más"
+    },
+    "labels": {
+      "theme": "Tema",
+      "confidence_thresholds": "Umbrales de Confianza",
+      "confidence_hint": "Un valor alto proporciona precisión, pero podrías perderte un evento débil.\nUn valor bajo da muchos hallazgos, pero entre ellos puede haber falsos.",
+      "language": "Idioma",
+      "language_auto": "Auto",
+      "duration": "Duración",
+      "segments": "Segmentos",
+      "analysis": "Análisis",
+      "no_segments": "No se encontraron segmentos",
+      "results_placeholder": "Los resultados del análisis se mostrarán aquí",
+      "performance": "Rendimiento",
+      "cpu_threads": "Hilos de CPU",
+      "performance_info": "Valores más bajos reducen la carga del sistema pero ralentizan el análisis",
+      "performance_restart": "⚠ Los cambios tendrán efecto después de reiniciar"
+    },
+    "messages": {
+      "error": "Error",
+      "info": "Información",
+      "load_files_first": "Por favor, cargue archivos de audio primero",
+      "all_files_analyzed": "Todos los archivos ya han sido analizados",
+      "unexpected_error": "Error inesperado",
+      "analysis_error": "Error de análisis",
+      "seek_error": "No se pudo buscar el tiempo especificado",
+      "analysis_in_progress_title": "Análisis en progreso",
+      "analysis_in_progress_message": "El análisis de audio está en curso. Cerrar la aplicación resultará en la pérdida de todos los resultados no guardados.\n¿Está seguro de que desea continuar?",
+      "ai_warning_title": "Verifique los resultados",
+      "ai_warning_message": "Son posibles omisiones y falsos positivos. Los resultados requieren verificación manual."
+    },
+    "dialogs": {
+      "select_audio": "Seleccionar archivos de audio"
+    }
+  },
+  "classes": {
+    "claps": "Aplausos",
+    "heavy_breathing": "Respiración Pesada",
+    "kisses": "Besos",
+    "moans": "Gemidos",
+    "background": "Fondo"
+  }
+}

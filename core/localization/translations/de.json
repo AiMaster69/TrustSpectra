@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "buttons": {
+      "load": "Audio laden",
+      "analyze": "Analysieren",
+      "settings": "☰",
+      "cancel": "Abbrechen",
+      "close_anyway": "Trotzdem schließen",
+      "ok": "Verstanden",
+      "dont_show_again": "Nicht mehr anzeigen"
+    },
+    "labels": {
+      "theme": "Thema",
+      "confidence_thresholds": "Konfidenzschwellen",
+      "confidence_hint": "Ein hoher Wert sorgt für Genauigkeit, aber Sie könnten ein schwaches Ereignis verpassen.\nEin niedriger Wert liefert viele Ergebnisse, aber darunter können auch falsche sein.",
+      "language": "Sprache",
+      "language_auto": "Auto",
+      "duration": "Dauer",
+      "segments": "Segmente",
+      "analysis": "Analyse",
+      "no_segments": "Keine Segmente gefunden",
+      "results_placeholder": "Analyseergebnisse werden hier angezeigt",
+      "performance": "Leistung",
+      "cpu_threads": "CPU-Threads",
+      "performance_info": "Niedrigere Werte reduzieren die Systemlast, verlangsamen aber die Analyse",
+      "performance_restart": "⚠ Änderungen werden nach Neustart wirksam"
+    },
+    "messages": {
+      "error": "Fehler",
+      "info": "Information",
+      "load_files_first": "Bitte laden Sie zuerst Audiodateien",
+      "all_files_analyzed": "Alle Dateien wurden bereits analysiert",
+      "unexpected_error": "Unerwarteter Fehler",
+      "analysis_error": "Analysefehler",
+      "seek_error": "Sprung zur angegebenen Zeit fehlgeschlagen",
+      "analysis_in_progress_title": "Analyse läuft",
+      "analysis_in_progress_message": "Die Audioanalyse wird derzeit ausgeführt. Das Schließen der Anwendung führt zum Verlust aller nicht gespeicherten Ergebnisse.\nSind Sie sicher, dass Sie fortfahren möchten?",
+      "ai_warning_title": "Ergebnisse bitte prüfen",
+      "ai_warning_message": "Fehlende Erkennungen und Fehlalarme sind möglich. Die Ergebnisse erfordern eine manuelle Überprüfung."
+    },
+    "dialogs": {
+      "select_audio": "Audiodateien auswählen"
+    }
+  },
+  "classes": {
+    "claps": "Klatschen",
+    "heavy_breathing": "Schweres Atmen",
+    "kisses": "Küsse",
+    "moans": "Stöhnen",
+    "background": "Hintergrund"
+  }
+}

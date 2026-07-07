@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "buttons": {
+      "load": "Charger l'audio",
+      "analyze": "Analyser",
+      "settings": "☰",
+      "cancel": "Annuler",
+      "close_anyway": "Fermer quand même",
+      "ok": "Compris",
+      "dont_show_again": "Ne plus afficher"
+    },
+    "labels": {
+      "theme": "Thème",
+      "confidence_thresholds": "Seuils de confiance",
+      "confidence_hint": "Une valeur élevée donne de la précision, mais vous pourriez manquer un événement faible.\nUne valeur basse donne beaucoup de résultats, mais parmi eux, il peut y avoir des faux.",
+      "language": "Langue",
+      "language_auto": "Auto",
+      "duration": "Durée",
+      "segments": "Segments",
+      "analysis": "Analyse",
+      "no_segments": "Aucun segment trouvé",
+      "results_placeholder": "Les résultats de l'analyse seront affichés ici",
+      "performance": "Performance",
+      "cpu_threads": "Threads CPU",
+      "performance_info": "Des valeurs plus faibles réduisent la charge système mais ralentissent l'analyse",
+      "performance_restart": "⚠ Les modifications prendront effet après le redémarrage"
+    },
+    "messages": {
+      "error": "Erreur",
+      "info": "Information",
+      "load_files_first": "Veuillez d'abord charger des fichiers audio",
+      "all_files_analyzed": "Tous les fichiers ont déjà été analysés",
+      "unexpected_error": "Erreur inattendue",
+      "analysis_error": "Erreur d'analyse",
+      "seek_error": "Impossible de se déplacer au temps spécifié",
+      "analysis_in_progress_title": "Analyse en cours",
+      "analysis_in_progress_message": "L'analyse audio est en cours. La fermeture de l'application entraînera la perte de tous les résultats non sauvegardés.\nÊtes-vous sûr de vouloir continuer ?",
+      "ai_warning_title": "Vérifiez les résultats",
+      "ai_warning_message": "Des omissions et des faux positifs sont possibles. Les résultats nécessitent une vérification manuelle."
+    },
+    "dialogs": {
+      "select_audio": "Sélectionner des fichiers audio"
+    }
+  },
+  "classes": {
+    "claps": "Applaudissements",
+    "heavy_breathing": "Respiration lourde",
+    "kisses": "Baisers",
+    "moans": "Gémissements",
+    "background": "Arrière-plan"
+  }
+}

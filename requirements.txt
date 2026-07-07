@@ -1,0 +1,30 @@
+# Основные зависимости
+PyQt6>=6.0.0
+numpy>=1.21.0
+sounddevice>=0.4.6
+soundfile>=0.12.1
+mutagen>=1.45.1
+
+# ИИ и обработка звука
+onnxruntime>=1.16.0
+librosa>=0.10.0
+scipy>=1.9.0
+
+# Тестирование (нужно только для разработки)
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# Линтеры и форматирование (нужно только для разработки)
+black>=22.0.0
+flake8>=5.0.0
+mypy>=1.0.0
+
+# Для разработки
+pre-commit>=2.20.0
+
+# Инструкции по установке:
+# 1. Создайте виртуальное окружение: python -m venv .venv
+# 2. Активируйте его: .venv\Scripts\activate (Windows) или source .venv/bin/activate (Linux/Mac)
+# 3. Установите зависимости: pip install -r requirements.txt
+# 4. Поместите обученную модель model.onnx в папку models/audio_model
+# 5. Запустите приложение: python run.py

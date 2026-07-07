@@ -1,0 +1,52 @@
+{
+  "ui": {
+    "buttons": {
+      "load": "加载音频",
+      "analyze": "分析",
+      "settings": "☰",
+      "cancel": "取消",
+      "close_anyway": "仍然关闭",
+      "ok": "知道了",
+      "dont_show_again": "不再显示"
+    },
+    "labels": {
+      "theme": "主题",
+      "confidence_thresholds": "置信度阈值",
+      "confidence_hint": "高值可提供准确性，但可能会错过微弱事件。\n低值会产生大量发现，但其中可能包含误报。",
+      "language": "语言",
+      "language_auto": "自动",
+      "duration": "时长",
+      "segments": "片段",
+      "analysis": "分析",
+      "no_segments": "未找到片段",
+      "results_placeholder": "分析结果将显示在这里",
+      "performance": "性能",
+      "cpu_threads": "CPU线程",
+      "performance_info": "较低的值会减少系统负载，但会减慢分析速度",
+      "performance_restart": "⚠ 更改将在重启后生效"
+    },
+    "messages": {
+      "error": "错误",
+      "info": "信息",
+      "load_files_first": "请先加载音频文件",
+      "all_files_analyzed": "所有文件已经分析完毕",
+      "unexpected_error": "意外错误",
+      "analysis_error": "分析错误",
+      "seek_error": "无法跳转到指定时间",
+      "analysis_in_progress_title": "分析进行中",
+      "analysis_in_progress_message": "当前正在进行音频分析。关闭应用程序将导致所有未保存的结果丢失。\n您确定要继续吗？",
+      "ai_warning_title": "请核实结果",
+      "ai_warning_message": "可能存在遗漏和误报。结果需要人工核实。"
+    },
+    "dialogs": {
+      "select_audio": "选择音频文件"
+    }
+  },
+  "classes": {
+    "claps": "拍手",
+    "heavy_breathing": "沉重呼吸",
+    "kisses": "亲吻",
+    "moans": "呻吟",
+    "background": "背景"
+  }
+}

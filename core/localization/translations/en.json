@@ -1,0 +1,54 @@
+{
+  "ui": {
+    "buttons": {
+      "load": "Load Audio",
+      "analyze": "Analyze",
+      "settings": "☰",
+      "labeling": "Labeling Panel",
+      "cancel": "Cancel",
+      "close_anyway": "Close Anyway",
+      "ok": "Got it",
+      "dont_show_again": "Don't show again"
+    },
+    "labels": {
+      "theme": "Theme",
+      "confidence_thresholds": "Confidence Thresholds",
+      "confidence_hint": "A high value provides accuracy, but you might miss a weak event.\nA low value yields many findings, but among them there may be false ones.",
+      "language": "Language",
+      "language_auto": "Auto",
+      "duration": "Duration",
+      "segments": "Segments",
+      "analysis": "Analysis",
+      "no_segments": "No segments found",
+      "results_placeholder": "Analysis results will be displayed here",
+      "performance": "Performance",
+      "performance_desc": "Adjust CPU usage to prevent system slowdown",
+      "cpu_threads": "CPU Threads",
+      "performance_info": "Lower values reduce system load but slow down analysis",
+      "performance_restart": "⚠ Changes will take effect after restart"
+    },
+    "messages": {
+      "error": "Error",
+      "info": "Information",
+      "load_files_first": "Please load audio files first",
+      "all_files_analyzed": "All files have already been analyzed",
+      "unexpected_error": "Unexpected error",
+      "analysis_error": "Analysis error",
+      "seek_error": "Failed to seek to specified time",
+      "analysis_in_progress_title": "Analysis in Progress",
+      "analysis_in_progress_message": "Audio analysis is currently running. Closing the application will result in the loss of all unsaved results.\nAre you sure you want to continue?",
+      "ai_warning_title": "Please Verify the Results",
+      "ai_warning_message": "Misses and false positives are possible. Results require manual verification."
+    },
+    "dialogs": {
+      "select_audio": "Select audio files"
+    }
+  },
+  "classes": {
+    "claps": "Claps",
+    "heavy_breathing": "Heavy Breathing",
+    "kisses": "Kisses",
+    "moans": "Moans",
+    "background": "Background"
+  }
+}
