@@ -37,13 +37,14 @@
 ## 📥 Installation
 
 ### For end users (ready-to-use installer)
-1. Go to the **Releases** tab (on the right side of this page) or download the latest `TrustSpectra-Setup.exe` (~117 MB) via the [direct link]().
+1. Go to the **Releases** tab (on the right side of this page) or download the latest `TrustSpectra-Setup.exe` (~117 MB) via the
+2. [![Download TrustSpectra v0.9.0](https://img.shields.io/badge/Download-v0.9.0-blue?style=for-the-badge&logo=github)](https://github.com/AiMaster69/TrustSpectra/releases/download/v0.9.0/TrustSpectra_v0.9.0_setup.exe)
    > *Note: The large file size is because all offline models and audio processing libraries are embedded. No additional internet download is required.*
-2. Run `TrustSpectra-Setup.exe` and follow the installer instructions.
-3. Open the app, click **"Load Audio"** (supports `.mp3`, `.wav`, `.ogg`, `.flac`).
-4. **Adjust sensitivity:** in the side panel, change the confidence threshold (higher means stricter detection).
-5. **Run the analysis** and wait for it to complete.
-6. **Review the results:** click on any timestamp in the list to preview the found fragment.
+3. Run `TrustSpectra-Setup.exe` and follow the installer instructions.
+4. Open the app, click **"Load Audio"** (supports `.mp3`, `.wav`, `.ogg`, `.flac`).
+5. **Adjust sensitivity:** in the side panel, change the confidence threshold (higher means stricter detection).
+6. **Run the analysis** and wait for it to complete.
+7. **Review the results:** click on any timestamp in the list to preview the found fragment.
 
 ### 🧑‍💻 For developers (run from source)
 If you want to run the program directly from the code:
