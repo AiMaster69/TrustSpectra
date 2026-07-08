@@ -1,12 +1,12 @@
-import sys
 import ctypes
-from threading import Lock
+import sys
 from enum import IntEnum
+from threading import Lock
 from typing import Optional
 
-from PyQt6.QtWidgets import QWidget
+from PyQt6.QtCore import QObject, Qt, pyqtSignal, pyqtSlot
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot, Qt
+from PyQt6.QtWidgets import QWidget
 
 from utils.logger import logger
 
@@ -30,7 +30,7 @@ if sys.platform == "win32":
             self.Data2 = int(s[8:12], 16)
             self.Data3 = int(s[12:16], 16)
             for i in range(8):
-                self.Data4[i] = int(s[16 + i * 2:18 + i * 2], 16)
+                self.Data4[i] = int(s[16 + i * 2 : 18 + i * 2], 16)
 
     CLSID_TaskbarList = GUID("{56FDF344-FD6D-11d0-958A-006097C9A090}")
     IID_ITaskbarList3 = GUID("{ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf}")
@@ -44,8 +44,11 @@ if sys.platform == "win32":
     ole32.CoInitializeEx.argtypes = [ctypes.c_void_p, wintypes.DWORD]
     ole32.CoInitializeEx.restype = ctypes.HRESULT
     ole32.CoCreateInstance.argtypes = [
-        ctypes.POINTER(GUID), ctypes.c_void_p, wintypes.DWORD,
-        ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p)
+        ctypes.POINTER(GUID),
+        ctypes.c_void_p,
+        wintypes.DWORD,
+        ctypes.POINTER(GUID),
+        ctypes.POINTER(ctypes.c_void_p),
     ]
     ole32.CoCreateInstance.restype = ctypes.HRESULT
 
@@ -73,37 +76,179 @@ if sys.platform == "win32":
 
     # Определяем функции vtable
     IUnknownVtbl._fields_ = [
-        ("QueryInterface", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(IUnknown), ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
+        (
+            "QueryInterface",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(IUnknown),
+                ctypes.POINTER(GUID),
+                ctypes.POINTER(ctypes.c_void_p),
+            ),
+        ),
         ("AddRef", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.POINTER(IUnknown))),
         ("Release", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.POINTER(IUnknown))),
     ]
 
     ITaskbarList3Vtbl._fields_ = [
         # IUnknown
-        ("QueryInterface", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), ctypes.POINTER(GUID), ctypes.POINTER(ctypes.c_void_p))),
+        (
+            "QueryInterface",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                ctypes.POINTER(GUID),
+                ctypes.POINTER(ctypes.c_void_p),
+            ),
+        ),
         ("AddRef", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.POINTER(ITaskbarList3))),
         ("Release", ctypes.WINFUNCTYPE(ctypes.c_ulong, ctypes.POINTER(ITaskbarList3))),
         # ITaskbarList
         ("HrInit", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3))),
-        ("AddTab", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND)),
-        ("DeleteTab", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND)),
-        ("ActivateTab", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND)),
-        ("SetActiveAlt", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND)),
+        (
+            "AddTab",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND
+            ),
+        ),
+        (
+            "DeleteTab",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND
+            ),
+        ),
+        (
+            "ActivateTab",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND
+            ),
+        ),
+        (
+            "SetActiveAlt",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND
+            ),
+        ),
         # ITaskbarList2
-        ("MarkFullscreenWindow", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.BOOL)),
+        (
+            "MarkFullscreenWindow",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.BOOL,
+            ),
+        ),
         # ITaskbarList3
-        ("SetProgressValue", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_ulonglong, ctypes.c_ulonglong)),
-        ("SetProgressState", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_int)),
-        ("RegisterTab", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.HWND)),
-        ("UnregisterTab", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND)),
-        ("SetTabOrder", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.HWND)),
-        ("SetTabActive", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.HWND, wintypes.DWORD)),
-        ("ThumbBarAddButtons", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_uint, ctypes.c_void_p)),
-        ("ThumbBarUpdateButtons", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_uint, ctypes.c_void_p)),
-        ("ThumbBarSetImageList", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_void_p)),
-        ("SetOverlayIcon", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.HICON, wintypes.LPCWSTR)),
-        ("SetThumbnailTooltip", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, wintypes.LPCWSTR)),
-        ("SetThumbnailClip", ctypes.WINFUNCTYPE(ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND, ctypes.c_void_p)),
+        (
+            "SetProgressValue",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_ulonglong,
+                ctypes.c_ulonglong,
+            ),
+        ),
+        (
+            "SetProgressState",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_int,
+            ),
+        ),
+        (
+            "RegisterTab",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.HWND,
+            ),
+        ),
+        (
+            "UnregisterTab",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT, ctypes.POINTER(ITaskbarList3), wintypes.HWND
+            ),
+        ),
+        (
+            "SetTabOrder",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.HWND,
+            ),
+        ),
+        (
+            "SetTabActive",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.HWND,
+                wintypes.DWORD,
+            ),
+        ),
+        (
+            "ThumbBarAddButtons",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_uint,
+                ctypes.c_void_p,
+            ),
+        ),
+        (
+            "ThumbBarUpdateButtons",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_uint,
+                ctypes.c_void_p,
+            ),
+        ),
+        (
+            "ThumbBarSetImageList",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_void_p,
+            ),
+        ),
+        (
+            "SetOverlayIcon",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.HICON,
+                wintypes.LPCWSTR,
+            ),
+        ),
+        (
+            "SetThumbnailTooltip",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                wintypes.LPCWSTR,
+            ),
+        ),
+        (
+            "SetThumbnailClip",
+            ctypes.WINFUNCTYPE(
+                ctypes.HRESULT,
+                ctypes.POINTER(ITaskbarList3),
+                wintypes.HWND,
+                ctypes.c_void_p,
+            ),
+        ),
     ]
 
 
@@ -120,7 +265,7 @@ class TaskbarProgressManager(QObject):
     Менеджер прогресса в панели задач Windows через ITaskbarList3.
     Оптимизирован для многопоточности и минимального потребления ресурсов.
     """
-    
+
     # Сигналы для безопасного вызова из фоновых потоков
     sig_set_overlay = pyqtSignal(QIcon, str)
     sig_clear_overlay = pyqtSignal()
@@ -130,27 +275,31 @@ class TaskbarProgressManager(QObject):
         self._parent = parent_window
         self._hwnd: Optional[int] = None
         self._taskbar = None
-        
+
         # Кэшированные методы vtable для ускорения вызовов
         self._com_SetProgressValue = None
         self._com_SetProgressState = None
         self._com_SetOverlayIcon = None
         self._com_Release = None
-        
+
         self._initialized = False
         self._total_files = 0
         self._files_progress: dict[str, int] = {}
         self._total_progress_sum = 0
-        
+
         # Оптимизация COM-вызовов (предотвращает спам одинаковыми значениями)
         self._last_overall_percent = -1
-        
+
         # Блокировка для обеспечения потокобезопасности
         self._lock = Lock()
 
-        # Привязываем сигналы к слотам с QueuedConnection (гарантирует выполнение в GUI потоке)
-        self.sig_set_overlay.connect(self._slot_set_overlay, Qt.ConnectionType.QueuedConnection)
-        self.sig_clear_overlay.connect(self._slot_clear_overlay, Qt.ConnectionType.QueuedConnection)
+        # Привязываем сигналы к слотам с QueuedConnection
+        self.sig_set_overlay.connect(
+            self._slot_set_overlay, Qt.ConnectionType.QueuedConnection
+        )
+        self.sig_clear_overlay.connect(
+            self._slot_clear_overlay, Qt.ConnectionType.QueuedConnection
+        )
 
     def __del__(self):
         """Гарантированное освобождение COM-объекта."""
@@ -198,7 +347,7 @@ class TaskbarProgressManager(QObject):
                 None,
                 CLSCTX_INPROC_SERVER,
                 ctypes.byref(IID_ITaskbarList3),
-                ctypes.byref(ptr)
+                ctypes.byref(ptr),
             )
             if hr < 0:
                 logger.warning(f"CoCreateInstance ITaskbarList3 failed: {hr:#x}")
@@ -240,7 +389,7 @@ class TaskbarProgressManager(QObject):
             self._files_progress.clear()
             self._total_progress_sum = 0
             self._last_overall_percent = -1
-            
+
         self._set_state(TaskbarState.NORMAL)
         self._set_value(0)
         logger.debug(f"Taskbar progress started: {total_files} files")
@@ -256,32 +405,32 @@ class TaskbarProgressManager(QObject):
             return
 
         percent = max(0, min(100, percent))
-        
+
         with self._lock:
             old_percent = self._files_progress.get(file_path, 0)
-            
+
             # Пропускаем, если процент конкретного файла не изменился
             if old_percent == percent:
                 return
 
-            self._total_progress_sum += (percent - old_percent)
-            
+            self._total_progress_sum += percent - old_percent
+
             # ОПТИМИЗАЦИЯ ПАМЯТИ: Удаляем файл, если он завершен на 100%
             if percent == 100:
                 self._files_progress.pop(file_path, None)
             else:
                 self._files_progress[file_path] = percent
-            
+
             # ДОПОЛНИТЕЛЬНАЯ ЗАЩИТА: проверяем _total_files ещё раз под блокировкой
             if self._total_files == 0:
                 return
-                
+
             overall = int(self._total_progress_sum / self._total_files)
-            
+
             # ОПТИМИЗАЦИЯ COM: Вызываем Windows API, только если ИЗМЕНИЛСЯ ОБЩИЙ процент
             if overall == self._last_overall_percent:
                 return
-                
+
             self._last_overall_percent = overall
 
         # Вызов COM вне блока блокировки, чтобы не тормозить другие потоки
@@ -306,13 +455,13 @@ class TaskbarProgressManager(QObject):
         """Завершает и скрывает индикатор."""
         if self._taskbar is not None:
             self._set_state(TaskbarState.NOPROGRESS)
-            
+
         with self._lock:
             self._files_progress.clear()
             self._total_progress_sum = 0
             self._total_files = 0
             self._last_overall_percent = -1
-            
+
         logger.debug("Taskbar progress finished")
 
     def set_overlay_icon(self, icon: QIcon, description: str = "") -> None:
@@ -341,7 +490,7 @@ class TaskbarProgressManager(QObject):
     def _slot_set_overlay(self, icon: QIcon, description: str) -> None:
         if not self._com_SetOverlayIcon:
             return
-            
+
         try:
             pixmap = icon.pixmap(16, 16)
             if pixmap.isNull():
@@ -355,11 +504,11 @@ class TaskbarProgressManager(QObject):
 
             desc = description if description else None
             self._com_SetOverlayIcon(self._taskbar, self._hwnd, hicon, desc)
-            
+
             # Устранение утечки памяти GDI: оригинал нужно уничтожить
             if sys.platform == "win32":
                 user32.DestroyIcon(hicon)
-                
+
         except Exception as e:
             logger.warning(f"Не удалось установить overlay icon: {e}")
 

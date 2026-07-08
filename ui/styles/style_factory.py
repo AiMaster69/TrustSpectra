@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Any, Callable, Optional
+from typing import Any, Callable, Dict, Optional
 
 
 class StyleFactory:
@@ -32,7 +32,7 @@ class StyleFactory:
         self._colors.update(colors.copy())
         self._cache.clear()
 
-    # Доступ к значениям 
+    # Доступ к значениям
 
     def color(self, key: str, fallback: str = "#FFFFFF") -> str:
         return self._colors.get(key, fallback)
@@ -91,6 +91,7 @@ class StyleFactory:
 
 
 # Удобные алиасы для использования в модулях
+
 
 def sf() -> StyleFactory:
     """Возвращает глобальный экземпляр StyleFactory."""

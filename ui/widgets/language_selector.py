@@ -2,12 +2,12 @@ import locale
 import os
 from typing import Dict
 
-from PyQt6.QtWidgets import QWidget, QGridLayout, QPushButton
-from PyQt6.QtCore import pyqtSignal, QLocale
+from PyQt6.QtCore import QLocale, pyqtSignal
+from PyQt6.QtWidgets import QGridLayout, QPushButton, QWidget
 
-from ui.styles.themes import COLORS
-from ui.styles.style_factory import sf, register_style
 from core.localization import get_text
+from ui.styles.style_factory import register_style, sf
+from ui.styles.themes import COLORS
 
 
 # Регистрация шаблона в StyleFactory один раз
@@ -15,12 +15,14 @@ def _register_language_selector_template() -> None:
     """Регистрирует QSS-шаблон для LanguageSelector."""
 
     def _builder() -> str:
-        colors = getattr(__import__('ui.styles.themes', fromlist=['COLORS']), 'COLORS', {})
-        button_bg = colors.get('button_bg', '#e0e0e0')
-        text_color = colors.get('text', '#000000')
-        button_hover = colors.get('button_hover', '#d0d0d0')
-        primary = colors.get('primary', '#1976d2')
-        secondary = colors.get('secondary', '#1565c0')
+        colors = getattr(
+            __import__("ui.styles.themes", fromlist=["COLORS"]), "COLORS", {}
+        )
+        button_bg = colors.get("button_bg", "#e0e0e0")
+        text_color = colors.get("text", "#000000")
+        button_hover = colors.get("button_hover", "#d0d0d0")
+        primary = colors.get("primary", "#1976d2")
+        secondary = colors.get("secondary", "#1565c0")
 
         return f"""
             QPushButton {{
@@ -44,9 +46,9 @@ def _register_language_selector_template() -> None:
         """
 
     try:
-        sf().build('language_selector')
+        sf().build("language_selector")
     except KeyError:
-        register_style('language_selector', _builder)
+        register_style("language_selector", _builder)
 
 
 class LanguageSelector(QWidget):
@@ -55,30 +57,30 @@ class LanguageSelector(QWidget):
     languageChanged = pyqtSignal(str)
 
     LANGUAGES: Dict[str, str] = {
-        'auto': 'ui.labels.language_auto',
-        'en': 'English',
-        'zh': '中文',
-        'es': 'Español',
-        'fr': 'Français',
-        'de': 'Deutsch',
-        'pt': 'Português',
-        'ru': 'Русский'
+        "auto": "ui.labels.language_auto",
+        "en": "English",
+        "zh": "中文",
+        "es": "Español",
+        "fr": "Français",
+        "de": "Deutsch",
+        "pt": "Português",
+        "ru": "Русский",
     }
 
     _WINDOWS_LANG_MAP = {
-        'russian': 'ru',
-        'english': 'en',
-        'chinese': 'zh',
-        'spanish': 'es',
-        'french': 'fr',
-        'german': 'de',
-        'portuguese': 'pt'
+        "russian": "ru",
+        "english": "en",
+        "chinese": "zh",
+        "spanish": "es",
+        "french": "fr",
+        "german": "de",
+        "portuguese": "pt",
     }
 
     def __init__(self, parent=None):
         super().__init__(parent)
         _register_language_selector_template()
-        self.current_language = 'auto'
+        self.current_language = "auto"
         self.buttons: Dict[str, QPushButton] = {}
 
         self._setup_ui()
@@ -92,7 +94,7 @@ class LanguageSelector(QWidget):
         row = 0
         col = 0
         for lang_code, lang_name in self.LANGUAGES.items():
-            button_text = get_text(lang_name) if lang_code == 'auto' else lang_name
+            button_text = get_text(lang_name) if lang_code == "auto" else lang_name
 
             button = QPushButton(button_text)
             button.setCheckable(True)
@@ -145,15 +147,15 @@ class LanguageSelector(QWidget):
     def _detect_system_language(self) -> str:
         # Способ 1: QLocale (без side-эффектов)
         qt_locale = QLocale.system().name().lower()
-        lang_code = qt_locale.split('_')[0]
-        if lang_code in self.LANGUAGES and lang_code != 'auto':
+        lang_code = qt_locale.split("_")[0]
+        if lang_code in self.LANGUAGES and lang_code != "auto":
             return lang_code
 
         # Способ 2: переменная окружения
-        lang_env = os.environ.get('LANG', '')
+        lang_env = os.environ.get("LANG", "")
         if lang_env:
-            lang_code = lang_env.split('_')[0].lower().split('.')[0]
-            if lang_code in self.LANGUAGES and lang_code != 'auto':
+            lang_code = lang_env.split("_")[0].lower().split(".")[0]
+            if lang_code in self.LANGUAGES and lang_code != "auto":
                 return lang_code
 
         # Способ 3: getdefaultlocale (безопасный)
@@ -161,26 +163,26 @@ class LanguageSelector(QWidget):
             default_locale = locale.getdefaultlocale()[0]
             if default_locale:
                 lang_code = self._parse_locale(default_locale)
-                if lang_code in self.LANGUAGES and lang_code != 'auto':
+                if lang_code in self.LANGUAGES and lang_code != "auto":
                     return lang_code
         except Exception:
             pass
 
-        return 'en'
+        return "en"
 
     def _parse_locale(self, locale_str: str) -> str | None:
         locale_str = locale_str.lower()
-        if '_' in locale_str:
-            return locale_str.split('_')[0]
-        lang_name = locale_str.split('_')[0]
+        if "_" in locale_str:
+            return locale_str.split("_")[0]
+        lang_name = locale_str.split("_")[0]
         return self._WINDOWS_LANG_MAP.get(lang_name)
 
     def update_styles(self):
         """Обновляет стили виджета через StyleFactory."""
-        sf().invalidate('language_selector')
-        self.setStyleSheet(sf().build('language_selector'))
+        sf().invalidate("language_selector")
+        self.setStyleSheet(sf().build("language_selector"))
 
     def update_texts(self):
-        auto_button = self.buttons.get('auto')
+        auto_button = self.buttons.get("auto")
         if auto_button is not None:
-            auto_button.setText(get_text(self.LANGUAGES['auto']))
+            auto_button.setText(get_text(self.LANGUAGES["auto"]))

@@ -1,14 +1,25 @@
-from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QScrollArea, QFrame,
-                             QLabel, QHBoxLayout, QPushButton, QSizePolicy)
-from PyQt6.QtCore import Qt, pyqtSignal, QTimer
-from PyQt6.QtGui import QPainter, QColor, QPen, QFont, QCursor
-from typing import List, Dict, Any, Tuple
+from typing import Any, Dict, List, Tuple
+
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
+from PyQt6.QtGui import QColor, QCursor, QFont, QPainter, QPen
+from PyQt6.QtWidgets import (
+    QFrame,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QSizePolicy,
+    QVBoxLayout,
+    QWidget,
+)
+
 from core.localization import get_text
 from ui.styles.style_factory import sf
 
 
 class TimelineWidget(QWidget):
     """Виджет временной шкалы."""
+
     marker_clicked = pyqtSignal(float)
     time_clicked = pyqtSignal(str, float)
 
@@ -31,16 +42,20 @@ class TimelineWidget(QWidget):
 
         self.results_scroll = QScrollArea()
         self.results_scroll.setWidgetResizable(True)
-        self.results_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.results_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.results_scroll.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAsNeeded
+        )
+        self.results_scroll.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         self.results_scroll.setStyleSheet(self._get_horizontal_scrollbar_style())
 
         self.results_container = QWidget()
         self.results_container.setObjectName("results_container")
         self.results_layout = QHBoxLayout(self.results_container)
-        m = sf().size('results_contents_margin', 10)
+        m = sf().size("results_contents_margin", 10)
         self.results_layout.setContentsMargins(m, m, m, m)
-        self.results_layout.setSpacing(sf().size('results_spacing', 10))
+        self.results_layout.setSpacing(sf().size("results_spacing", 10))
         self.results_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.results_scroll.setWidget(self.results_container)
@@ -48,8 +63,12 @@ class TimelineWidget(QWidget):
 
         self.timeline_scroll = QScrollArea()
         self.timeline_scroll.setWidgetResizable(True)
-        self.timeline_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
-        self.timeline_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.timeline_scroll.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOn
+        )
+        self.timeline_scroll.setVerticalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         self.timeline_scroll.setStyleSheet(self._get_horizontal_scrollbar_style())
 
         self.draw_widget = TimelineDrawWidget(self)
@@ -100,17 +119,24 @@ class TimelineWidget(QWidget):
             self.results_container.update()
         except Exception as e:
             from utils.logger import logger
+
             logger.error(f"Ошибка начала анализа: {e}")
             import traceback
+
             traceback.print_exc()
 
-    def update_file_progress(self, file_path, progress_percent, estimated_time_remaining=None):
+    def update_file_progress(
+        self, file_path, progress_percent, estimated_time_remaining=None
+    ):
         if file_path in self.file_blocks:
             file_block = self.file_blocks[file_path]
             progress_label = file_block.findChild(QLabel, "progress_label")
             if progress_label:
                 text = f"{int(progress_percent)}%"
-                if estimated_time_remaining is not None and estimated_time_remaining > 0:
+                if (
+                    estimated_time_remaining is not None
+                    and estimated_time_remaining > 0
+                ):
                     if estimated_time_remaining < 60:
                         time_str = f"{int(estimated_time_remaining)}s"
                     else:
@@ -125,7 +151,9 @@ class TimelineWidget(QWidget):
     def update_file_result(self, file_path, analysis_result):
         try:
             if file_path not in self.file_blocks:
-                new_block = self._create_file_block_optimized(file_path, analysis_result)
+                new_block = self._create_file_block_optimized(
+                    file_path, analysis_result
+                )
                 self.file_blocks[file_path] = new_block
 
                 count = self.results_layout.count()
@@ -167,19 +195,23 @@ class TimelineWidget(QWidget):
             self.results_container.update()
         except Exception as e:
             from utils.logger import logger
+
             logger.error(f"Ошибка обновления результата файла: {e}")
             import traceback
+
             traceback.print_exc()
 
     def show_multiple_analysis_results(self, results_list: List[Tuple[str, Any]]):
         self._pending_results = results_list
-        self._update_timer.start(sf().size('update_timer_delay', 50))
+        self._update_timer.start(sf().size("update_timer_delay", 50))
 
     def _perform_update(self):
         try:
             self.clear_analysis_results()
             for file_path, analysis_result in self._pending_results:
-                file_block = self._create_file_block_optimized(file_path, analysis_result)
+                file_block = self._create_file_block_optimized(
+                    file_path, analysis_result
+                )
                 self.file_blocks[file_path] = file_block
                 self.results_layout.addWidget(file_block)
                 self._active_widgets.append(file_block)
@@ -188,31 +220,33 @@ class TimelineWidget(QWidget):
             self.results_container.update()
         except Exception as e:
             from utils.logger import logger
+
             logger.error(f"Ошибка отображения результатов: {e}")
             import traceback
+
             traceback.print_exc()
 
     def _create_progress_file_block(self, file_path: str) -> QFrame:
         main_frame = QFrame()
         main_frame.setObjectName("file_block")
-        main_frame.setFixedWidth(sf().size('file_block_width', 300))
-        main_frame.setMinimumHeight(sf().size('progress_block_min_height', 150))
+        main_frame.setFixedWidth(sf().size("file_block_width", 300))
+        main_frame.setMinimumHeight(sf().size("progress_block_min_height", 150))
         main_frame.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-        main_frame.setStyleSheet(sf().build('file_block'))
+        main_frame.setStyleSheet(sf().build("file_block"))
 
         main_layout = QVBoxLayout(main_frame)
-        m = sf().size('file_block_margin', 5)
+        m = sf().size("file_block_margin", 5)
         main_layout.setContentsMargins(m, m, m, m)
-        main_layout.setSpacing(sf().size('file_block_spacing', 8))
+        main_layout.setSpacing(sf().size("file_block_spacing", 8))
 
         progress_label = QLabel("0%")
         progress_label.setObjectName("progress_label")
         progress_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         progress_label_font = QFont()
-        progress_label_font.setPixelSize(sf().size('progress_font_size', 18))
+        progress_label_font.setPixelSize(sf().size("progress_font_size", 18))
         progress_label_font.setBold(True)
         progress_label.setFont(progress_label_font)
-        progress_label.setStyleSheet(sf().build('progress_label'))
+        progress_label.setStyleSheet(sf().build("progress_label"))
 
         main_layout.addStretch()
         main_layout.addWidget(progress_label)
@@ -222,19 +256,20 @@ class TimelineWidget(QWidget):
 
     def _create_file_block_optimized(self, file_path: str, analysis_result) -> QFrame:
         import os
+
         filename = os.path.basename(file_path)
 
         main_frame = QFrame()
         main_frame.setObjectName("file_block")
-        main_frame.setFixedWidth(sf().size('file_block_width', 300))
-        main_frame.setMinimumHeight(sf().size('file_block_min_height', 200))
+        main_frame.setFixedWidth(sf().size("file_block_width", 300))
+        main_frame.setMinimumHeight(sf().size("file_block_min_height", 200))
         main_frame.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-        main_frame.setStyleSheet(sf().build('file_block'))
+        main_frame.setStyleSheet(sf().build("file_block"))
 
         main_layout = QVBoxLayout(main_frame)
-        m = sf().size('file_block_margin', 5)
+        m = sf().size("file_block_margin", 5)
         main_layout.setContentsMargins(m, m, m, m)
-        main_layout.setSpacing(sf().size('file_block_spacing', 8))
+        main_layout.setSpacing(sf().size("file_block_spacing", 8))
 
         file_header = self._create_file_header(filename)
         main_layout.addWidget(file_header)
@@ -258,9 +293,9 @@ class TimelineWidget(QWidget):
         info_label.setObjectName("file_info")
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label_font = QFont()
-        info_label_font.setPixelSize(sf().size('info_font_size', 13))
+        info_label_font.setPixelSize(sf().size("info_font_size", 13))
         info_label.setFont(info_label_font)
-        info_label.setStyleSheet(sf().build('file_info'))
+        info_label.setStyleSheet(sf().build("file_info"))
         main_layout.addWidget(info_label)
 
         segments_scroll = self._create_segments_scroll(segments, file_path)
@@ -274,24 +309,26 @@ class TimelineWidget(QWidget):
         file_header.setAlignment(Qt.AlignmentFlag.AlignCenter)
         file_header.setWordWrap(True)
         file_header_font = QFont()
-        file_header_font.setPixelSize(sf().size('header_font_size', 16))
+        file_header_font.setPixelSize(sf().size("header_font_size", 16))
         file_header_font.setBold(True)
         file_header.setFont(file_header_font)
-        file_header.setStyleSheet(sf().build('file_header'))
+        file_header.setStyleSheet(sf().build("file_header"))
         return file_header
 
     def _create_segments_scroll(self, segments: List, file_path: str) -> QScrollArea:
         segments_scroll = QScrollArea()
         segments_scroll.setWidgetResizable(True)
-        segments_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        segments_scroll.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+        )
         segments_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         segments_scroll.setStyleSheet(self._get_vertical_scrollbar_style())
 
         segments_container = QWidget()
         segments_layout = QVBoxLayout(segments_container)
-        sm = sf().size('segment_container_margin', 2)
+        sm = sf().size("segment_container_margin", 2)
         segments_layout.setContentsMargins(sm, sm, sm, sm)
-        segments_layout.setSpacing(sf().size('segment_container_spacing', 4))
+        segments_layout.setSpacing(sf().size("segment_container_spacing", 4))
 
         if segments:
             segment_blocks = [
@@ -315,18 +352,20 @@ class TimelineWidget(QWidget):
         segments_scroll.setWidget(segments_container)
         return segments_scroll
 
-    def _create_segment_block_optimized(self, index: int, segment, file_path: str) -> QFrame:
+    def _create_segment_block_optimized(
+        self, index: int, segment, file_path: str
+    ) -> QFrame:
         frame = QFrame()
         frame.setObjectName("segment_block")
-        frame.setMinimumHeight(sf().size('segment_min_height', 50))
-        frame.setMaximumHeight(sf().size('segment_max_height', 60))
-        frame.setStyleSheet(sf().build('segment_block'))
+        frame.setMinimumHeight(sf().size("segment_min_height", 50))
+        frame.setMaximumHeight(sf().size("segment_max_height", 60))
+        frame.setStyleSheet(sf().build("segment_block"))
 
         layout = QHBoxLayout(frame)
-        h = sf().size('segment_padding_h', 8)
-        v = sf().size('segment_padding_v', 6)
+        h = sf().size("segment_padding_h", 8)
+        v = sf().size("segment_padding_v", 6)
         layout.setContentsMargins(h, v, h, v)
-        layout.setSpacing(sf().size('segment_spacing', 8))
+        layout.setSpacing(sf().size("segment_spacing", 8))
 
         if isinstance(segment, dict):
             start_time = segment.get("segment_start", segment.get("start_time", 0))
@@ -359,9 +398,9 @@ class TimelineWidget(QWidget):
         time_button = self._create_time_button_formatted(
             start_time, file_path, format_time(start_time)
         )
-        time_button.setMinimumWidth(sf().size('time_button_min_width', 70))
+        time_button.setMinimumWidth(sf().size("time_button_min_width", 70))
         time_button_font = QFont()
-        time_button_font.setPixelSize(sf().size('segment_font_size', 13))
+        time_button_font.setPixelSize(sf().size("segment_font_size", 13))
         time_button_font.setBold(True)
         time_button.setFont(time_button_font)
         layout.addWidget(time_button)
@@ -373,40 +412,51 @@ class TimelineWidget(QWidget):
         class_label.setWordWrap(True)
         class_font = QFont()
         class_font.setBold(True)
-        class_font.setPixelSize(sf().size('segment_font_size', 13))
+        class_font.setPixelSize(sf().size("segment_font_size", 13))
         class_label.setFont(class_font)
-        class_label.setMinimumWidth(sf().size('class_label_min_width', 100))
-        class_label.setMaximumWidth(sf().size('class_label_max_width', 140))
+        class_label.setMinimumWidth(sf().size("class_label_min_width", 100))
+        class_label.setMaximumWidth(sf().size("class_label_max_width", 140))
         layout.addWidget(class_label)
 
         confidence_label = QLabel(f"{confidence:.1%}")
         confidence_font = QFont()
-        confidence_font.setPixelSize(sf().size('segment_font_size', 13))
+        confidence_font.setPixelSize(sf().size("segment_font_size", 13))
         confidence_label.setFont(confidence_font)
         confidence_label.setStyleSheet(f"color: {sf().color('secondary')};")
-        confidence_label.setMinimumWidth(sf().size('confidence_min_width', 45))
+        confidence_label.setMinimumWidth(sf().size("confidence_min_width", 45))
         layout.addWidget(confidence_label)
 
         layout.addStretch()
         return frame
 
     def _create_time_button(self, start_time: float, file_path: str) -> QPushButton:
-        return self._create_time_button_formatted(file_path, file_path, f"{start_time:.2f}s")
+        return self._create_time_button_formatted(
+            file_path, file_path, f"{start_time:.2f}s"
+        )
 
-    def _create_time_button_formatted(self, start_time: float, file_path: str, formatted_time: str) -> QPushButton:
+    def _create_time_button_formatted(
+        self, start_time: float, file_path: str, formatted_time: str
+    ) -> QPushButton:
         time_button = QPushButton(formatted_time)
-        time_button.setStyleSheet(sf().build('time_button'))
+        time_button.setStyleSheet(sf().build("time_button"))
         time_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        time_button.clicked.connect(lambda: self.time_clicked.emit(file_path, start_time))
+        time_button.clicked.connect(
+            lambda: self.time_clicked.emit(file_path, start_time)
+        )
         return time_button
 
     def update_texts(self):
         for file_path, file_block in self.file_blocks.items():
             progress_label = file_block.findChild(QLabel, "progress_label")
-            if progress_label and get_text("ui.labels.analysis") in progress_label.text():
+            if (
+                progress_label
+                and get_text("ui.labels.analysis") in progress_label.text()
+            ):
                 try:
                     percent = progress_label.text().split(":")[-1].strip()
-                    progress_label.setText(f"{get_text('ui.labels.analysis')}: {percent}")
+                    progress_label.setText(
+                        f"{get_text('ui.labels.analysis')}: {percent}"
+                    )
                 except Exception:
                     pass
 
@@ -465,12 +515,14 @@ class TimelineWidget(QWidget):
             self.results_container.update()
         except Exception as e:
             from utils.logger import logger
+
             logger.error(f"Ошибка очистки результатов: {e}")
             import traceback
+
             traceback.print_exc()
 
     def update_styles(self):
-        self.setStyleSheet(sf().build('timeline_widget'))
+        self.setStyleSheet(sf().build("timeline_widget"))
         self.results_scroll.setStyleSheet(self._get_horizontal_scrollbar_style())
         self.timeline_scroll.setStyleSheet(self._get_horizontal_scrollbar_style())
 
@@ -480,22 +532,22 @@ class TimelineWidget(QWidget):
                 w = item.widget() if item else None
                 if not w:
                     continue
-                w.setStyleSheet(sf().build('file_block'))
+                w.setStyleSheet(sf().build("file_block"))
 
                 header = w.findChild(QLabel, "file_header")
                 if header:
-                    header.setStyleSheet(sf().build('file_header'))
+                    header.setStyleSheet(sf().build("file_header"))
 
                 info = w.findChild(QLabel, "file_info")
                 if info:
-                    info.setStyleSheet(sf().build('file_info'))
+                    info.setStyleSheet(sf().build("file_info"))
 
                 progress = w.findChild(QLabel, "progress_label")
                 if progress:
-                    progress.setStyleSheet(sf().build('progress_label'))
+                    progress.setStyleSheet(sf().build("progress_label"))
 
                 for segment in w.findChildren(QFrame, "segment_block"):
-                    segment.setStyleSheet(sf().build('segment_block'))
+                    segment.setStyleSheet(sf().build("segment_block"))
         except Exception:
             pass
 
@@ -534,7 +586,7 @@ class TimelineDrawWidget(QFrame):
     def __init__(self, parent):
         super().__init__(parent)
         self._timeline_widget = parent
-        self.setMinimumWidth(sf().size('timeline_min_width', 1000))
+        self.setMinimumWidth(sf().size("timeline_min_width", 1000))
         self._hover_time = None
         self._is_scrolling = False
         self.setMouseTracking(True)
@@ -555,21 +607,27 @@ class TimelineDrawWidget(QFrame):
             }
         colors = self._cached_painter_settings
 
-        hover_line_width = sf().size('timeline_hover_line_width', 1)
-        hover_offset_x = sf().size('timeline_hover_text_offset_x', 5)
-        hover_offset_y = sf().size('timeline_hover_text_offset_y', 5)
-        marker_line_width = sf().size('timeline_marker_line_width', 2)
-        marker_offset_x = sf().size('timeline_marker_text_offset_x', 5)
-        marker_offset_y = sf().size('timeline_marker_text_offset_y', 20)
+        hover_line_width = sf().size("timeline_hover_line_width", 1)
+        hover_offset_x = sf().size("timeline_hover_text_offset_x", 5)
+        hover_offset_y = sf().size("timeline_hover_text_offset_y", 5)
+        marker_line_width = sf().size("timeline_marker_line_width", 2)
+        marker_offset_x = sf().size("timeline_marker_text_offset_x", 5)
+        marker_offset_y = sf().size("timeline_marker_text_offset_y", 20)
 
         if self._hover_time is not None:
             x = int(self._hover_time * self.width() / self._timeline_widget.duration)
-            painter.setPen(QPen(colors["hover_color"], hover_line_width, Qt.PenStyle.DashLine))
+            painter.setPen(
+                QPen(colors["hover_color"], hover_line_width, Qt.PenStyle.DashLine)
+            )
             painter.drawLine(x, 0, x, self.height())
 
-            time_text = f"{int(self._hover_time // 60)}:{int(self._hover_time % 60):02d}"
+            time_text = (
+                f"{int(self._hover_time // 60)}:{int(self._hover_time % 60):02d}"
+            )
             painter.setPen(colors["text_color"])
-            painter.drawText(x + hover_offset_x, self.height() - hover_offset_y, time_text)
+            painter.drawText(
+                x + hover_offset_x, self.height() - hover_offset_y, time_text
+            )
 
         if self._timeline_widget.markers:
             width_ratio = self.width() / self._timeline_widget.duration
@@ -600,7 +658,10 @@ class TimelineDrawWidget(QFrame):
         super().leaveEvent(event)
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton and self._timeline_widget.duration:
+        if (
+            event.button() == Qt.MouseButton.LeftButton
+            and self._timeline_widget.duration
+        ):
             self._is_scrolling = True
             self._handle_click(event)
 

@@ -1,4 +1,5 @@
 import logging
+
 from PyQt6.QtNetwork import QLocalServer, QLocalSocket
 
 logger = logging.getLogger("TrustSpectra")
@@ -23,7 +24,7 @@ def ensure_single_instance(app_id: str = "TrustSpectra_SingleInstance") -> bool:
     if not _SINGLE_INSTANCE_SERVER.listen(app_id):
         logger.error(
             "Не удалось создать single-instance сервер: %s",
-            _SINGLE_INSTANCE_SERVER.errorString()
+            _SINGLE_INSTANCE_SERVER.errorString(),
         )
         return False
     return True

@@ -1,4 +1,4 @@
-from .style_factory import sf, register_style
+from .style_factory import register_style, sf
 from .themes import COLORS, SIZES
 
 
@@ -14,11 +14,14 @@ def _s(key: str, fallback: int = 0) -> int:
 
 # РЕГИСТРАЦИЯ ШАБЛОНОВ
 
+
 def _register_all_styles() -> None:
     """Регистрирует все именованные шаблоны стилей."""
 
     # Базовые кнопки
-    register_style("button", lambda: f"""
+    register_style(
+        "button",
+        lambda: f"""
         QPushButton {{
             min-height: {_s('button_height')}px;
             border-radius: {_s('radius')}px;
@@ -39,10 +42,13 @@ def _register_all_styles() -> None:
             background: {_c('border')};
             color: {_c('secondary')};
         }}
-    """)
+    """,
+    )
 
     # Кнопка настроек
-    register_style("settings_button", lambda: f"""
+    register_style(
+        "settings_button",
+        lambda: f"""
         QPushButton {{
             background: {_c('button_bg')};
             color: {_c('text')};
@@ -67,10 +73,13 @@ def _register_all_styles() -> None:
             background: {_c('primary')};
             color: white;
         }}
-    """)
+    """,
+    )
 
     # Кнопка анализа
-    register_style("analyze_button", lambda: f"""
+    register_style(
+        "analyze_button",
+        lambda: f"""
         QPushButton {{
             min-height: {_s('button_height')}px;
             border-radius: {_s('radius')}px;
@@ -91,17 +100,23 @@ def _register_all_styles() -> None:
             background: {_c('border')};
             color: {_c('secondary')};
         }}
-    """)
+    """,
+    )
 
     # Заголовок / Title
-    register_style("title", lambda: f"""
+    register_style(
+        "title",
+        lambda: f"""
         background: {_c('title_bg')};
         border-radius: {_s('radius')}px;
         border: none;
-    """)
+    """,
+    )
 
     # Слайдер
-    register_style("slider", lambda: f"""
+    register_style(
+        "slider",
+        lambda: f"""
         QSlider::groove:horizontal {{
             border: none;
             height: {_s('slider_height')}px;
@@ -127,10 +142,13 @@ def _register_all_styles() -> None:
             background: {_c('primary')};
             border-radius: {_s('slider_height') // 2}px;
         }}
-    """)
+    """,
+    )
 
     # ComboBox
-    register_style("combobox", lambda: f"""
+    register_style(
+        "combobox",
+        lambda: f"""
         QComboBox {{
             min-height: {_s('button_height')}px;
             border-radius: {_s('radius')}px;
@@ -184,10 +202,13 @@ def _register_all_styles() -> None:
             background: {_c('button_hover')};
             color: {_c('primary')};
         }}
-    """)
+    """,
+    )
 
     # SpinBox
-    register_style("spinbox", lambda: f"""
+    register_style(
+        "spinbox",
+        lambda: f"""
         QSpinBox, QDoubleSpinBox {{
             min-height: {_s('button_height')}px;
             border-radius: {_s('radius')}px;
@@ -245,10 +266,13 @@ def _register_all_styles() -> None:
         QSpinBox::down-arrow:hover, QDoubleSpinBox::down-arrow:hover {{
             border-top-color: {_c('primary')};
         }}
-    """)
+    """,
+    )
 
     # CheckBox
-    register_style("checkbox", lambda: f"""
+    register_style(
+        "checkbox",
+        lambda: f"""
         QCheckBox {{
             spacing: 8px;
             font-size: {_s('font_size')}px;
@@ -274,10 +298,13 @@ def _register_all_styles() -> None:
             background: {_c('secondary')};
             border-color: {_c('secondary')};
         }}
-    """)
+    """,
+    )
 
     # GroupBox
-    register_style("groupbox", lambda: f"""
+    register_style(
+        "groupbox",
+        lambda: f"""
         QGroupBox {{
             font-weight: bold;
             font-size: {_s('font_size')}px;
@@ -293,10 +320,13 @@ def _register_all_styles() -> None:
             padding: 0 5px 0 5px;
             color: {_c('text')};
         }}
-    """)
+    """,
+    )
 
     # ScrollBar (толстый, общий)
-    register_style("scrollbar", lambda: f"""
+    register_style(
+        "scrollbar",
+        lambda: f"""
         QScrollBar:vertical {{
             background: {_c('button_bg')};
             width: 12px;
@@ -329,10 +359,13 @@ def _register_all_styles() -> None:
         QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
             width: 0px;
         }}
-    """)
+    """,
+    )
 
     # ToolTip
-    register_style("tooltip", lambda: f"""
+    register_style(
+        "tooltip",
+        lambda: f"""
         QToolTip {{
             color: {_c('text')};
             background-color: {_c('background')};
@@ -341,46 +374,59 @@ def _register_all_styles() -> None:
             padding: 4px 8px;
             font-size: {_s('font_size') - 2}px;
         }}
-    """)
+    """,
+    )
 
     # TimeLabel
-    register_style("time_label", lambda: f"""
+    register_style(
+        "time_label",
+        lambda: f"""
         QLabel {{
             color: {_c('text')};
             font-size: {_s('font_size') - 2}px;
             background: transparent;
             border: none;
         }}
-    """)
+    """,
+    )
 
     # MainWidget
-    register_style("main_widget", lambda: f"""
+    register_style(
+        "main_widget",
+        lambda: f"""
         QWidget {{
             background: {_c('background')};
             color: {_c('text')};
             border-radius: 0px;
         }}
-    """)
+    """,
+    )
 
-    
-
-    register_style("file_block", lambda: f"""
+    register_style(
+        "file_block",
+        lambda: f"""
        QFrame#file_block {{
            background-color: {_c('surface_alt', _c('button_bg'))};
            border: none;
            border-radius: {_s('radius', 8)}px;
        }}
-""")
+""",
+    )
 
-    register_style("segment_block", lambda: f"""
+    register_style(
+        "segment_block",
+        lambda: f"""
         QFrame#segment_block {{
             background-color: {_c('segment_bg', _c('button_bg'))};
             border: none;
             border-radius: {_s('radius', 4)}px;
         }}
-    """)
+    """,
+    )
 
-    register_style("file_header", lambda: f"""
+    register_style(
+        "file_header",
+        lambda: f"""
         QLabel#file_header {{
             color: {_c('primary')};
             padding: {_s('padding', 12)}px;
@@ -388,9 +434,12 @@ def _register_all_styles() -> None:
             background-color: transparent;
             max-height: {_s('file_header_max_height', 60)}px;
         }}
-    """)
+    """,
+    )
 
-    register_style("file_info", lambda: f"""
+    register_style(
+        "file_info",
+        lambda: f"""
         QLabel#file_info {{
             color: {_c('text')};
             padding: {_s('padding', 12)}px;
@@ -398,18 +447,24 @@ def _register_all_styles() -> None:
             background-color: transparent;
             border: none;
         }}
-    """)
+    """,
+    )
 
-    register_style("progress_label", lambda: f"""
+    register_style(
+        "progress_label",
+        lambda: f"""
         QLabel#progress_label {{
             color: {_c('secondary')};
             padding: {_s('padding', 12)}px;
             background-color: transparent;
             border: none;
         }}
-    """)
+    """,
+    )
 
-    register_style("time_button", lambda: f"""
+    register_style(
+        "time_button",
+        lambda: f"""
         QPushButton {{
             background: transparent;
             border: none;
@@ -419,9 +474,12 @@ def _register_all_styles() -> None:
             min-width: {_s('time_button_min_width', 70)}px;
             max-width: {_s('time_button_max_width', 100)}px;
         }}
-    """)
+    """,
+    )
 
-    register_style("scrollbar_thin_horizontal", lambda: f"""
+    register_style(
+        "scrollbar_thin_horizontal",
+        lambda: f"""
         QScrollBar:horizontal {{
             height: {_s('scrollbar_thin_width', 6)}px;
             background: transparent;
@@ -446,9 +504,12 @@ def _register_all_styles() -> None:
         QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {{
             background: transparent;
         }}
-    """)
+    """,
+    )
 
-    register_style("scrollbar_thin_vertical", lambda: f"""
+    register_style(
+        "scrollbar_thin_vertical",
+        lambda: f"""
         QScrollBar:vertical {{
             width: {_s('scrollbar_thin_width', 6)}px;
             background: transparent;
@@ -473,10 +534,13 @@ def _register_all_styles() -> None:
         QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
             background: transparent;
         }}
-    """)
+    """,
+    )
 
-        # TimelineWidget
-    register_style("timeline_widget", lambda: f"""
+    # TimelineWidget
+    register_style(
+        "timeline_widget",
+        lambda: f"""
         TimelineWidget {{
             background-color: {_c('background')};
         }}
@@ -515,10 +579,13 @@ def _register_all_styles() -> None:
             color: {_c('text')};
         }}
         {sf().build('tooltip')}
-    """)
+    """,
+    )
 
     # SettingsWidget
-    register_style("settings_widget", lambda: f"""
+    register_style(
+        "settings_widget",
+        lambda: f"""
         QWidget {{
             background: {_c('background')};
             color: {_c('text')};
@@ -609,10 +676,13 @@ def _register_all_styles() -> None:
             border-color: {_c('primary')};
             background: {_c('button_hover')};
         }}
-    """)
+    """,
+    )
 
     # SettingsBlock
-    register_style("settings_block", lambda: f"""
+    register_style(
+        "settings_block",
+        lambda: f"""
         QWidget {{
             border: none;
             border-radius: {_s('radius')}px;
@@ -631,10 +701,13 @@ def _register_all_styles() -> None:
             padding: 0px;
             margin: 0px;
         }}
-    """)
+    """,
+    )
 
     # CloseButton
-    register_style("close_button", lambda: f"""
+    register_style(
+        "close_button",
+        lambda: f"""
         QPushButton {{
             background: transparent;
             color: {_c('text')};
@@ -654,10 +727,13 @@ def _register_all_styles() -> None:
             background: {_c('primary')};
             color: white;
         }}
-    """)
+    """,
+    )
 
     # PlayerWidget
-    register_style("player_widget", lambda: f"""
+    register_style(
+        "player_widget",
+        lambda: f"""
         QPushButton {{
             background: {_c('button_bg')};
             border: none;
@@ -707,10 +783,13 @@ def _register_all_styles() -> None:
             border-bottom-left-radius: 2px;
         }}
         {sf().build('tooltip')}
-    """)
+    """,
+    )
 
     # TitleBar
-    register_style("title_bar", lambda: f"""
+    register_style(
+        "title_bar",
+        lambda: f"""
         TitleBar {{
             background: {_c('title_bg')};
             border-top-left-radius: {_s('radius')}px;
@@ -724,10 +803,13 @@ def _register_all_styles() -> None:
             background: transparent;
         }}
         {sf().build('tooltip')}
-    """)
+    """,
+    )
 
     # FileListWidget
-    register_style("file_list", lambda: f"""
+    register_style(
+        "file_list",
+        lambda: f"""
         QListWidget {{
             background: {_c('button_bg')};
             border: 1px solid {_c('border')};
@@ -765,10 +847,13 @@ def _register_all_styles() -> None:
         QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
             height: 0px;
         }}
-    """)
+    """,
+    )
 
     # ThemedMessageBox
-    register_style("message_box", lambda: f"""
+    register_style(
+        "message_box",
+        lambda: f"""
         QMessageBox {{
             background: {_c('background')};
         }}
@@ -792,10 +877,13 @@ def _register_all_styles() -> None:
             background: {_c('primary')};
             color: white;
         }}
-    """)
-    
+    """,
+    )
+
     # ThemedDialog
-    register_style("themed_dialog", lambda: f"""
+    register_style(
+        "themed_dialog",
+        lambda: f"""
         QWidget#dialogContent {{
             background-color: {_c('surface_alt', _c('button_bg'))};
             border-radius: {_s('dialog_radius', 12)}px;
@@ -816,7 +904,7 @@ def _register_all_styles() -> None:
             line-height: 1.5;
             font-size: {_s('font_size')}px;
         }}
-        
+
         /* Главная кнопка (синяя, без рамок) */
         QPushButton#dialogConfirmButton {{
             background-color: {_c('primary')};
@@ -851,9 +939,8 @@ def _register_all_styles() -> None:
             background-color: {_c('secondary')};
             color: white;
         }}
-    """)
-
-
+    """,
+    )
 
 
 # Выполняем регистрацию при импорте модуля

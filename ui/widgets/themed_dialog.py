@@ -1,12 +1,17 @@
-from PyQt6.QtWidgets import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QWidget
-)
-from PyQt6.QtCore import Qt, QPropertyAnimation, QEasingCurve, QEvent
+from PyQt6.QtCore import QEasingCurve, QEvent, QPropertyAnimation, Qt
 from PyQt6.QtGui import QFont
+from PyQt6.QtWidgets import (
+    QDialog,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
-from ui.styles.themes import COLORS
-from ui.styles.style_factory import sf
 from core.localization import get_text
+from ui.styles.style_factory import sf
+from ui.styles.themes import COLORS
 
 
 class BaseThemedDialog(QDialog):
@@ -14,7 +19,10 @@ class BaseThemedDialog(QDialog):
     Универсальный базовый класс для всех всплывающих окон.
     Берет на себя настройку окна, анимации, стили, иконки, заголовок и текст.
     """
-    def __init__(self, parent=None, title: str = "", message: str = "", icon_type: str = "info"):
+
+    def __init__(
+        self, parent=None, title: str = "", message: str = "", icon_type: str = "info"
+    ):
         super().__init__(parent)
 
         self.setWindowTitle(title)
@@ -42,7 +50,7 @@ class BaseThemedDialog(QDialog):
             "error": ("#F44336", "✕"),
             "warning": ("#FF9800", "⚠"),
             "success": ("#4CAF50", "✓"),
-            "info": ("#2196F3", "ℹ")
+            "info": ("#2196F3", "ℹ"),
         }
         color_key = self.icon_type if self.icon_type in icon_map else "info"
         self.icon_color = COLORS.get(color_key, icon_map[color_key][0])
@@ -60,12 +68,12 @@ class BaseThemedDialog(QDialog):
         content_layout.setContentsMargins(30, 30, 30, 20)
 
         header_layout = QHBoxLayout()
-        
+
         self.icon_label = QLabel(self.icon_text)
         self.icon_label.setObjectName("dialogIcon")
         self.icon_label.setFixedSize(40, 40)
         self.icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+
         icon_font = QFont()
         icon_font.setPointSize(20)
         self.icon_label.setFont(icon_font)
@@ -85,13 +93,15 @@ class BaseThemedDialog(QDialog):
         message_label = QLabel(self.message_text)
         message_label.setObjectName("dialogMessage")
         message_label.setWordWrap(True)
-        message_label.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        message_label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
         content_layout.addWidget(message_label)
 
         self.button_layout = QHBoxLayout()
         self.button_layout.setSpacing(12)
         self.button_layout.addStretch()
-        
+
         content_layout.addLayout(self.button_layout)
         main_layout.addWidget(self.content_widget)
 
@@ -107,7 +117,10 @@ class BaseThemedDialog(QDialog):
         self.content_widget.setStyleSheet(base_stylesheet + "\n" + icon_stylesheet)
 
     def changeEvent(self, event):
-        if event.type() in (QEvent.Type.StyleChange, QEvent.Type.ApplicationPaletteChange):
+        if event.type() in (
+            QEvent.Type.StyleChange,
+            QEvent.Type.ApplicationPaletteChange,
+        ):
             self._setup_colors()
             self._apply_styles()
         super().changeEvent(event)
@@ -118,7 +131,7 @@ class BaseThemedDialog(QDialog):
             parent_rect = self.parent().geometry()
             self.move(
                 parent_rect.center().x() - self.width() // 2,
-                parent_rect.center().y() - self.height() // 2
+                parent_rect.center().y() - self.height() // 2,
             )
         if self._animation.state() != QPropertyAnimation.State.Running:
             self.setWindowOpacity(0.0)
@@ -130,23 +143,34 @@ class BaseThemedDialog(QDialog):
 
 
 class ThemedDialog(BaseThemedDialog):
-    def __init__(self, parent=None, title: str = "", message: str = "", icon_type: str = "info"):
+    def __init__(
+        self, parent=None, title: str = "", message: str = "", icon_type: str = "info"
+    ):
         super().__init__(parent, title, message, icon_type)
 
         self.ok_button = QPushButton("OK")
         self.ok_button.setObjectName("dialogConfirmButton")
-        self.ok_button.setFixedHeight(36) # Фиксируем только высоту! Ширина подстроится под текст
-        self.ok_button.setMinimumWidth(100) # Но делаем не меньше 100px, чтобы не была крошечной
+        self.ok_button.setFixedHeight(
+            36
+        )  # Фиксируем только высоту! Ширина подстроится под текст
+        self.ok_button.setMinimumWidth(
+            100
+        )  # Но делаем не меньше 100px, чтобы не была крошечной
         self.ok_button.setCursor(Qt.CursorShape.PointingHandCursor)
         self.ok_button.clicked.connect(self.accept)
-        
+
         self.button_layout.addWidget(self.ok_button)
 
 
 class ThemedConfirmDialog(BaseThemedDialog):
     def __init__(
-        self, parent=None, title: str = "", message: str = "", 
-        icon_type: str = "warning", cancel_text: str = "Cancel", confirm_text: str = "Continue"
+        self,
+        parent=None,
+        title: str = "",
+        message: str = "",
+        icon_type: str = "warning",
+        cancel_text: str = "Cancel",
+        confirm_text: str = "Continue",
     ):
         super().__init__(parent, title, message, icon_type)
 
@@ -172,10 +196,10 @@ class ThemedConfirmDialog(BaseThemedDialog):
 class AIWarningDialog(BaseThemedDialog):
     def __init__(self, parent=None, settings_service=None):
         super().__init__(
-            parent, 
-            title=get_text("ui.messages.ai_warning_title"), 
-            message=get_text("ui.messages.ai_warning_message"), 
-            icon_type="warning"
+            parent,
+            title=get_text("ui.messages.ai_warning_title"),
+            message=get_text("ui.messages.ai_warning_message"),
+            icon_type="warning",
         )
         self.settings_service = settings_service
 
@@ -231,8 +255,14 @@ class ThemedMessageBox:
 
     @staticmethod
     def confirm(
-        parent, title: str, message: str, icon_type: str = "warning",
-        cancel_text: str = "Cancel", confirm_text: str = "Continue",
+        parent,
+        title: str,
+        message: str,
+        icon_type: str = "warning",
+        cancel_text: str = "Cancel",
+        confirm_text: str = "Continue",
     ) -> int:
-        dialog = ThemedConfirmDialog(parent, title, message, icon_type, cancel_text, confirm_text)
+        dialog = ThemedConfirmDialog(
+            parent, title, message, icon_type, cancel_text, confirm_text
+        )
         return dialog.exec()

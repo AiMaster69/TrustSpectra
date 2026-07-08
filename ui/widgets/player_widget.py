@@ -1,15 +1,23 @@
+import logging
 import os
 import sys
 import threading
-import logging
 from typing import Optional
 
-from PyQt6.QtWidgets import (
-    QWidget, QHBoxLayout, QVBoxLayout, QPushButton,
-    QSlider, QLabel, QSizePolicy, QStyle, QStyleOptionSlider
-)
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QThread
+from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QFontDatabase
+from PyQt6.QtWidgets import (
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QSizePolicy,
+    QSlider,
+    QStyle,
+    QStyleOptionSlider,
+    QVBoxLayout,
+    QWidget,
+)
+
 from ui.styles.style_factory import sf
 
 logger = logging.getLogger(__name__)
@@ -17,6 +25,7 @@ logger = logging.getLogger(__name__)
 try:
     import sounddevice as sd
     import soundfile as sf_audio
+
     AUDIO_AVAILABLE = True
 except ImportError:
     AUDIO_AVAILABLE = False
@@ -26,7 +35,7 @@ except ImportError:
 
 
 def resource_path(relative_path: str) -> str:
-    base_path = getattr(sys, '_MEIPASS', os.path.abspath("."))
+    base_path = getattr(sys, "_MEIPASS", os.path.abspath("."))
     return os.path.join(base_path, relative_path)
 
 
@@ -79,16 +88,20 @@ class TimeSlider(QSlider):
         style = self.style()
 
         handle = style.subControlRect(
-            QStyle.ComplexControl.CC_Slider, opt,
-            QStyle.SubControl.SC_SliderHandle, self
+            QStyle.ComplexControl.CC_Slider,
+            opt,
+            QStyle.SubControl.SC_SliderHandle,
+            self,
         )
         if handle.contains(event.pos()):
             super().mousePressEvent(event)
             return
 
         groove = style.subControlRect(
-            QStyle.ComplexControl.CC_Slider, opt,
-            QStyle.SubControl.SC_SliderGroove, self
+            QStyle.ComplexControl.CC_Slider,
+            opt,
+            QStyle.SubControl.SC_SliderGroove,
+            self,
         )
         if not groove.contains(event.pos()):
             return
@@ -132,10 +145,10 @@ class AudioEngine(QThread):
         self._seek_frame = -1
         self._volume = 0.5
         self._generation = 0
-        
+
         self._stop_event = threading.Event()
         self._play_event = threading.Event()
-        
+
         self._blocksize = 2048
         self._last_emitted_ms = -1
 
@@ -159,7 +172,7 @@ class AudioEngine(QThread):
             self._file_path = file_path
             self._samplerate = self._audio_file.samplerate
             self._channels = self._audio_file.channels
-            
+
             self._total_frames = len(self._audio_file)
             if self._total_frames <= 0:
                 self._audio_file.seek(0, sf_audio.SEEK_END)
@@ -175,14 +188,16 @@ class AudioEngine(QThread):
                 # ВАЖНО: НЕ сбрасываем _generation здесь,
                 # он синхронизируется извне через set_generation()
                 self._stop_event.clear()
-                self._play_event.clear() 
+                self._play_event.clear()
 
             self.duration_changed.emit(self._duration_ms)
-            logger.info("Аудио загружено: %s, duration=%d мс", file_path, self._duration_ms)
-            
+            logger.info(
+                "Аудио загружено: %s, duration=%d мс", file_path, self._duration_ms
+            )
+
             self.start()
             return True
-            
+
         except Exception as exc:
             self.error_occurred.emit(f"Ошибка загрузки: {exc}")
             return False
@@ -223,7 +238,7 @@ class AudioEngine(QThread):
             self._generation = generation
             self._seek_frame = min(max(0, frame), max(0, self._total_frames - 1))
             self._last_emitted_ms = -1
-            
+
             if not self._play_event.is_set():
                 self._audio_file.seek(self._seek_frame)
                 self._current_frame = self._seek_frame
@@ -257,7 +272,6 @@ class AudioEngine(QThread):
                 dtype="float32",
                 blocksize=self._blocksize,
             ) as stream:
-                
                 while not self._stop_event.is_set():
                     self._play_event.wait()
                     if self._stop_event.is_set():
@@ -425,7 +439,7 @@ class PlayerWidget(QWidget):
     def play(self) -> None:
         if self.is_playing or not self.current_file:
             return
-        
+
         if self._audio_engine:
             self._audio_engine.play()
         else:
@@ -449,7 +463,7 @@ class PlayerWidget(QWidget):
             self._audio_engine.reset(self._seek_generation)
         else:
             self._demo_timer.stop()
-            
+
         self._on_audio_state_changed(False)
 
     def seek(self, position: int) -> None:
@@ -493,7 +507,9 @@ class PlayerWidget(QWidget):
             if autoplay:
                 self.play()
 
-    def load_and_seek(self, file_path: str, position_ms: int = 0, autoplay: bool = False) -> None:
+    def load_and_seek(
+        self, file_path: str, position_ms: int = 0, autoplay: bool = False
+    ) -> None:
         self.current_file = file_path
 
         if self._audio_engine:
@@ -522,7 +538,7 @@ class PlayerWidget(QWidget):
         self.time_slider.setRange(0, 0)
         self.total_time.setText("0:00")
         self._update_time(0)
-        
+
         self.is_playing = False
         self.play_button.setText(self._icons["play"])
         self.play_button.setEnabled(False)
@@ -557,7 +573,9 @@ class PlayerWidget(QWidget):
 
     def _on_audio_state_changed(self, is_playing: bool) -> None:
         self.is_playing = is_playing
-        self.play_button.setText(self._icons["pause"] if is_playing else self._icons["play"])
+        self.play_button.setText(
+            self._icons["pause"] if is_playing else self._icons["play"]
+        )
 
     def _on_audio_finished(self) -> None:
         self.stop()

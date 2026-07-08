@@ -12,6 +12,7 @@ from ui.components.validators import FallbackDoubleValidator
 DEFAULT_CONFIDENCE = 0.9
 ANALYSIS_CLASSES = ("claps", "heavy_breathing", "kisses", "moans")
 
+
 class ConfidenceWidget(QWidget):
     confidenceChanged = pyqtSignal(str, float)
 
@@ -24,7 +25,7 @@ class ConfidenceWidget(QWidget):
     def _setup_ui(self):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        
+
         validator = FallbackDoubleValidator(0.0, 1.0, 2, DEFAULT_CONFIDENCE, self)
 
         for class_name in ANALYSIS_CLASSES:
@@ -41,29 +42,29 @@ class ConfidenceWidget(QWidget):
             input_field.setFixedHeight(32)
             input_field.setPlaceholderText(f"{DEFAULT_CONFIDENCE:.2f}")
             input_field.setValidator(validator)
-            
+
             input_field.editingFinished.connect(
                 partial(self._on_editing_finished, class_name, input_field)
             )
-            
+
             self._inputs[class_name] = input_field
 
             row_layout.addWidget(label)
             row_layout.addWidget(input_field)
             row_layout.addStretch()
             layout.addWidget(row)
-            
+
         hint_layout = QHBoxLayout()
         hint_layout.setContentsMargins(0, 8, 0, 0)
         self.hint_button = HintButton("ui.labels.confidence_hint")
         hint_layout.addWidget(self.hint_button)
         hint_layout.addStretch()
-        
+
         layout.addLayout(hint_layout)
 
     def _on_editing_finished(self, class_name: str, input_field: QLineEdit):
         text = input_field.text().strip()
-        
+
         # 1. Обработка пустого ввода или одиночной точки
         if not text or text == ".":
             val = DEFAULT_CONFIDENCE
@@ -75,7 +76,7 @@ class ConfidenceWidget(QWidget):
             except ValueError:
                 # Если ввели нечисловой мусор
                 val = DEFAULT_CONFIDENCE
-        
+
         # 3. Форматируем значение до 2 знаков и обновляем поле ввода.
         formatted_val = f"{val:.2f}"
         if input_field.text() != formatted_val:

@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
 from pathlib import Path
+
+from setuptools import find_packages, setup
 
 # Читаем README файл
 this_directory = Path(__file__).parent
@@ -7,20 +8,22 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 # Читаем requirements
 with open("requirements.txt", "r", encoding="utf-8") as f:
-    requirements = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+    requirements = [
+        line.strip() for line in f if line.strip() and not line.startswith("#")
+    ]
 
 setup(
     name="TrustSpectra",
     version="0.9.0",
-    author="???",
+    author="AiMaster69",
     author_email="???",
     description="Desktop application for audio analysis using machine learning",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/TrustSpectra/TrustSpectra",
+    url="https://github.com/AiMaster69/TrustSpectra",
     packages=find_packages(),
     classifiers=[
-    "Development Status :: Beta",
+        "Development Status :: Beta",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Windows",
@@ -32,7 +35,7 @@ setup(
     python_requires=">=3.8",
     install_requires=requirements,
     extras_require={
-    "dev": [
+        "dev": [
             "pytest>=7.0.0",
             "pytest-cov>=4.0.0",
             "black>=22.0.0",
@@ -42,13 +45,13 @@ setup(
         ],
     },
     entry_points={
-    "console_scripts": [
+        "console_scripts": [
             "audio-analyzer=app.main:main",
         ],
     },
     include_package_data=True,
     package_data={
-    "": ["*.json", "*.yaml", "*.yml"],
+        "": ["*.json", "*.yaml", "*.yml"],
     },
     zip_safe=False,
-) 
+)

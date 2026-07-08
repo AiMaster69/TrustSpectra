@@ -70,7 +70,7 @@ test_audio/
 *.mp3
 *.wav
 *.ogg
-*.flac 
+*.flac
 
 # Build assets
 TrustSpectra.spec

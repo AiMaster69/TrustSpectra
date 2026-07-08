@@ -6,10 +6,12 @@ from .analyzer import TrustSpectra
 logger = logging.getLogger(__name__)
 
 
-def create_analyzer_adapter(threshold: Optional[float] = None,
-                            num_threads: Optional[int] = None,
-                            chunk_duration: Optional[float] = None,
-                            use_chunked_loading: bool = True) -> TrustSpectra:
+def create_analyzer_adapter(
+    threshold: Optional[float] = None,
+    num_threads: Optional[int] = None,
+    chunk_duration: Optional[float] = None,
+    use_chunked_loading: bool = True,
+) -> TrustSpectra:
     """
     Фабрика для создания ONNX-анализатора.
     """
@@ -26,6 +28,9 @@ def create_analyzer_adapter(threshold: Optional[float] = None,
             "Проверьте путь к модели и целостность файла model.onnx."
         )
 
-    logger.info("TrustSpectra ONNX готов: устройство=%s, порог=%.3f",
-                analyzer.device, analyzer.confidence_threshold)
+    logger.info(
+        "TrustSpectra ONNX готов: устройство=%s, порог=%.3f",
+        analyzer.device,
+        analyzer.confidence_threshold,
+    )
     return analyzer

@@ -1,49 +1,49 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
-from utils.paths import get_user_data_dir
 from utils.logger import logger
-from .style_factory import sf, register_style
+from utils.paths import get_user_data_dir
 
+from .style_factory import register_style, sf
 
 THEME_COLORS: Dict[str, Dict[str, str]] = {
     "light": {
-        "primary": "#1976D2",         
+        "primary": "#1976D2",
         "background": "#FFFFFF",
-        "text": "#212121",           
+        "text": "#212121",
         "text_on_primary": "#FFFFFF",
-        "secondary": "#757575",        
+        "secondary": "#757575",
         "button_bg": "#F5F5F5",
         "button_hover": "#E0E0E0",
         "title_bg": "#F5F5F5",
         "border": "#E0E0E0",
-        "success": "#43A047",         
-        "warning": "#FB8C00",         
-        "error": "#E53935",           
-        "info": "#1E88E5",             
+        "success": "#43A047",
+        "warning": "#FB8C00",
+        "error": "#E53935",
+        "info": "#1E88E5",
         "surface": "#FFFFFF",
         "surface_alt": "#F5F5F5",
         "segment_bg": "#FAFAFA",
     },
     "dark": {
-        "primary": "#42A5F5",          
-        "background": "#121212",       
-        "text": "#E0E0E0",             
-        "text_on_primary": "#000000",  
-        "secondary": "#B0BEC5",       
-        "button_bg": "#2C2C2C",        
+        "primary": "#42A5F5",
+        "background": "#121212",
+        "text": "#E0E0E0",
+        "text_on_primary": "#000000",
+        "secondary": "#B0BEC5",
+        "button_bg": "#2C2C2C",
         "button_hover": "#3D3D3D",
-        "title_bg": "#1E1E1E",         
-        "border": "#333333",           
-        "success": "#66BB6A",          
-        "warning": "#FFA726",          
-        "error": "#EF5350",            
+        "title_bg": "#1E1E1E",
+        "border": "#333333",
+        "success": "#66BB6A",
+        "warning": "#FFA726",
+        "error": "#EF5350",
         "info": "#42A5F5",
-        "surface": "#1E1E1E",         
-        "surface_alt": "#252525",     
-        "segment_bg": "#2C2C2C",      
+        "surface": "#1E1E1E",
+        "surface_alt": "#252525",
+        "segment_bg": "#2C2C2C",
     },
 }
 COLORS: Dict[str, str] = THEME_COLORS["dark"].copy()

@@ -1,20 +1,22 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Optional, Dict, Any
-from datetime import datetime
 import logging
+from dataclasses import dataclass
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
 # Optional imports at module level with feature flags
 try:
     import soundfile as sf
+
     HAS_SOUNDFILE = True
 except ImportError:
     HAS_SOUNDFILE = False
 
 try:
     import mutagen
+
     HAS_MUTAGEN = True
 except ImportError:
     HAS_MUTAGEN = False
@@ -51,7 +53,7 @@ class AudioFile:
             raise ValueError(f"size must be >= 0, got {self.size}")
 
     @classmethod
-    def from_path(cls, file_path: Path) -> 'AudioFile':
+    def from_path(cls, file_path: Path) -> "AudioFile":
         """Создает объект AudioFile из пути к файлу.
 
         Читает метаданные без декодирования аудио (быстро и не требует RAM).
@@ -76,37 +78,35 @@ class AudioFile:
                 sample_rate = info.samplerate
                 channels = info.channels
                 # bit_depth извлекаем только для PCM-форматов (WAV, FLAC, AIFF)
-                if info.subtype and 'PCM' in info.subtype:
+                if info.subtype and "PCM" in info.subtype:
                     try:
-                        bit_depth = int(info.subtype.replace('PCM_', ''))
+                        bit_depth = int(info.subtype.replace("PCM_", ""))
                     except ValueError:
                         pass
             except Exception as e:
                 logger.warning(
-                    "soundfile failed to read info for %s: %s", 
-                    file_path.name, e
+                    "soundfile failed to read info for %s: %s", file_path.name, e
                 )
 
         # 2. Fallback на mutagen (MP3, AAC, OGG и т.д.)
         if duration == 0.0 and HAS_MUTAGEN:
             try:
                 audio_info = mutagen.File(str(file_path))
-                if audio_info and hasattr(audio_info, 'info'):
+                if audio_info and hasattr(audio_info, "info"):
                     info = audio_info.info
-                    if hasattr(info, 'length') and info.length:
+                    if hasattr(info, "length") and info.length:
                         duration = float(info.length)
-                    if hasattr(info, 'sample_rate') and info.sample_rate:
+                    if hasattr(info, "sample_rate") and info.sample_rate:
                         sample_rate = int(info.sample_rate)
-                    if hasattr(info, 'channels') and info.channels:
+                    if hasattr(info, "channels") and info.channels:
                         channels = int(info.channels)
                     # bit_depth имеет смысл только для несжатых форматов
-                    if suffix in ('.wav', '.flac', '.aiff', '.pcm', '.raw'):
-                        if hasattr(info, 'bits_per_sample') and info.bits_per_sample:
+                    if suffix in (".wav", ".flac", ".aiff", ".pcm", ".raw"):
+                        if hasattr(info, "bits_per_sample") and info.bits_per_sample:
                             bit_depth = int(info.bits_per_sample)
             except Exception as e:
                 logger.warning(
-                    "mutagen failed to read info for %s: %s", 
-                    file_path.name, e
+                    "mutagen failed to read info for %s: %s", file_path.name, e
                 )
 
         # 3. Последний fallback — грубая оценка по размеру файла
@@ -114,8 +114,9 @@ class AudioFile:
             duration = stat.st_size / (sample_rate * channels * 2)  # assume 16-bit
             logger.warning(
                 "Could not determine exact audio parameters for %s. "
-                "Using rough estimate: %.2f s", 
-                file_path.name, duration
+                "Using rough estimate: %.2f s",
+                file_path.name,
+                duration,
             )
 
         return cls(
@@ -128,41 +129,47 @@ class AudioFile:
             channels=channels,
             bit_depth=bit_depth,
             created_at=datetime.fromtimestamp(stat.st_ctime),
-            last_accessed=datetime.fromtimestamp(stat.st_atime)
+            last_accessed=datetime.fromtimestamp(stat.st_atime),
         )
 
     def to_dict(self) -> dict:
         """Преобразует объект в словарь для сериализации."""
         return {
-            'path': str(self.path),
-            'name': self.name,
-            'size': self.size,
-            'duration': self.duration,
-            'format': self.format,
-            'sample_rate': self.sample_rate,
-            'channels': self.channels,
-            'bit_depth': self.bit_depth,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'last_accessed': self.last_accessed.isoformat() if self.last_accessed else None
+            "path": str(self.path),
+            "name": self.name,
+            "size": self.size,
+            "duration": self.duration,
+            "format": self.format,
+            "sample_rate": self.sample_rate,
+            "channels": self.channels,
+            "bit_depth": self.bit_depth,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "last_accessed": self.last_accessed.isoformat()
+            if self.last_accessed
+            else None,
         }
 
     @classmethod
-    def from_dict(cls, data: dict) -> 'AudioFile':
+    def from_dict(cls, data: dict) -> "AudioFile":
         """Создает объект AudioFile из словаря.
 
         Безопасно обрабатывает отсутствующие ключи с разумными значениями по умолчанию.
         """
         return cls(
-            path=Path(data.get('path', '')),
-            name=data.get('name', 'unknown'),
-            size=data.get('size', 0),
-            duration=data.get('duration', 0.0),
-            format=data.get('format', ''),
-            sample_rate=data.get('sample_rate', 44100),
-            channels=data.get('channels', 2),
-            bit_depth=data.get('bit_depth'),
-            created_at=datetime.fromisoformat(data['created_at']) if data.get('created_at') else None,
-            last_accessed=datetime.fromisoformat(data['last_accessed']) if data.get('last_accessed') else None
+            path=Path(data.get("path", "")),
+            name=data.get("name", "unknown"),
+            size=data.get("size", 0),
+            duration=data.get("duration", 0.0),
+            format=data.get("format", ""),
+            sample_rate=data.get("sample_rate", 44100),
+            channels=data.get("channels", 2),
+            bit_depth=data.get("bit_depth"),
+            created_at=datetime.fromisoformat(data["created_at"])
+            if data.get("created_at")
+            else None,
+            last_accessed=datetime.fromisoformat(data["last_accessed"])
+            if data.get("last_accessed")
+            else None,
         )
 
     def __str__(self) -> str:

@@ -8,10 +8,10 @@
 
 ## ⚠️ Important Information
 
-> **Beta version and AI capabilities**  
+> **Beta version and AI capabilities**
 > The program is under active development. It relies on machine learning algorithms which are not infallible: false positives and missed fragments may occur. Analysis results **require mandatory manual verification**.
 >
-> **Ethics and legality**  
+> **Ethics and legality**
 > The program analyzes exclusively the files you upload yourself. Usage is permitted only for files you have the rights to, or those recorded with the consent of the participants. Use for covert surveillance or privacy violations is strictly prohibited. The author assumes no liability for the unlawful use of this software.
 
 ---
@@ -74,7 +74,7 @@ The project uses the following libraries (minimum versions specified):
 
 ## 💬 Feedback & Bug Reports
 
-If you've found a bug or have a suggestion, please join our **[Discord server](your_discord_invite_link_here)**. 
+If you've found a bug or have a suggestion, please join our **[Discord server](your_discord_invite_link_here)**.
 
 > **Important:** I personally review and handle all bug reports and feedback exclusively through Discord. Please use the appropriate channel there for technical support. GitHub Issues are not monitored for this project.
 
